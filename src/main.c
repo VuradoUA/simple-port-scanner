@@ -2,6 +2,7 @@
 #include <arpa/inet.h>   // inet_ntop
 #include <stdlib.h>      // strtol
 #include "net.h"         // resolve_host, struct sockaddr_in
+#include "scanner.h"
 
 #define DEFAULT_TIMEOUT 2000 // in ms -> 2s
 
@@ -26,7 +27,9 @@ int main(int argc, char *argv[]) {
 
     char ip[INET_ADDRSTRLEN];
     inet_ntop(AF_INET, &target.sin_addr, ip, sizeof ip);
-    printf("Scanning %s port %ld\n", ip, port);
+
+    enum port_state state = scan_port(&target, (uint16_t)port);
+    printf("%s:%ld %s\n", ip, port, port_state_str(state));
 
     return 0;
 
